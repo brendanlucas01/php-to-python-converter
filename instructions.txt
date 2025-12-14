@@ -1,0 +1,37 @@
+# Instructions to Run the New Python API
+
+## Prerequisites
+- Python 3.8+
+- pip
+
+## 1. Install Dependencies
+Run the following command to install the required Python packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+## 2. Run the Application
+Use `uvicorn` to start the FastAPI server. The following command starts the server on port 8000 (as requested) and enables auto-reload for development:
+
+```bash
+uvicorn src_python.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+## 3. Configuration (Optional)
+The application expects a PostgreSQL database. You can configure the connection details using environment variables. If not set, it defaults to `localhost`/`slim`/`slim_pass`.
+
+```bash
+export DB_HOST=localhost
+export DB_PORT=5432
+export DB_DATABASE=slim_db
+export DB_USERNAME=slim
+export DB_PASSWORD=slim_pass
+```
+
+## 4. Run Verification Tests
+To run the parity test suite:
+
+```bash
+pytest parity_tests.py
+```
