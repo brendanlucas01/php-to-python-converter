@@ -1,0 +1,7 @@
+{
+    "require": {
+        "slim/slim": "~2.0",
+        "cloudconvert/cloudconvert-php": "~2.2",
+        "catfan/Medoo": "^2.2.0"
+    }
+}

@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  workspace:
+    image: mcr.microsoft.com/vscode/devcontainers/php:8.2
+    command: sleep infinity
+    volumes:
+      - ..:/workspaces/app:cached
+    environment:
+      - XDEBUG_MODE=off
+    depends_on:
+      - php
+      - nginx
+      - db
+    # give access to docker if you need inner docker; usually not needed
+
+  php:
+    build:
+      context: ../docker/php-fpm
+    volumes:
+      - ..:/var/www/html:cached
+      - ./infra/php/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+    environment:
+      - COMPOSER_ALLOW_XDEBUG=0
+      - 'APP_ENV=$APP_ENV'
+      - 'APP_DEBUG=$APP_DEBUG'
+      - 'DB_USERNAME=$DB_USERNAME'
+      - 'DB_PASSWORD=$DB_PASSWORD'
+      - 'DB_DATABASE=$DB_DATABASE'
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:stable
+    volumes:
+      - ..:/var/www/html:ro
+      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - php
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: $DB_USERNAME
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_DATABASE
+      TZ: $TZ
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:

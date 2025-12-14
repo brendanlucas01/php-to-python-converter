@@ -1,0 +1,12 @@
+{
+  "name": "Slim V2 + Nginx + PHP-FPM + Postgres",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [8080],
+  "initializeCommand": "cp .devcontainer/.env.example .devcontainer/.env",
+  // "initializeCommand": "copy /Y .devcontainer\\.env.example .devcontainer\\.env",
+  "postCreateCommand": "echo 'Packages already installed, Skipping composer install'",
+  "remoteUser": "vscode"
+}
